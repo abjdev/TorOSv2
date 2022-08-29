@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32616.157
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EtorumOS", "EtorumOS\EtorumOS.csproj", "{D7AD2BB0-1EC6-4360-9A94-5BEC97C99C3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testing", "Testing\Testing.csproj", "{ED8EB71B-1ABB-491A-B3E6-35DAE10A8141}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D7AD2BB0-1EC6-4360-9A94-5BEC97C99C3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7AD2BB0-1EC6-4360-9A94-5BEC97C99C3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7AD2BB0-1EC6-4360-9A94-5BEC97C99C3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7AD2BB0-1EC6-4360-9A94-5BEC97C99C3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED8EB71B-1ABB-491A-B3E6-35DAE10A8141}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED8EB71B-1ABB-491A-B3E6-35DAE10A8141}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED8EB71B-1ABB-491A-B3E6-35DAE10A8141}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED8EB71B-1ABB-491A-B3E6-35DAE10A8141}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AB0EDADC-A290-4AA3-A80F-D3D0675B2F59}
+	EndGlobalSection
+EndGlobal
