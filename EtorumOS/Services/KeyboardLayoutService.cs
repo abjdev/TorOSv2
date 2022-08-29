@@ -41,10 +41,11 @@ namespace EtorumOS.Services {
 
                 if (!cfg.Options.Contains("layout")) {
                     Kernel.Instance.mDebugger.Send("a4");
-                    SetLayout("en_US");
-                }else {
+                    if(!SetLayout("en_US")) ShowSelection();
+                }
+                else {
                     Kernel.Instance.mDebugger.Send("a5");
-                    SetLayout((string)cfg.Options["layout"]);
+                    if (!SetLayout((string)cfg.Options["layout"])) ShowSelection();
                 }
 
                 Kernel.Instance.mDebugger.Send("a6");
@@ -63,22 +64,19 @@ namespace EtorumOS.Services {
 Your Selection: ");
 
                 string res = Console.ReadLine();
+                byte[] bytes = Encoding.Unicode.GetBytes(res);
+                Kernel.Instance.mDebugger.Send(bytes.Join(", "));
                 bool success = true;
 
-                switch (res) {
-                    case "1":
-                        success = SetLayout("en_US");
-                        break;
-                    case "2":
-                        success = SetLayout("de_DE");
-                        Kernel.Instance.mDebugger.Send(success ? "de_DE t" : "de_DE f");
-                        break;
-                    case "3":
-                        success = SetLayout("fr_FR");
-                        break;
-                    default:
-                        success = false;
-                        break;
+                if (res == "1") {
+                    success = SetLayout("en_US");
+                } else if (res == "2") {
+                    success = SetLayout("de_DE");
+                    Kernel.Instance.mDebugger.Send(success ? "de_DE t" : "de_DE f");
+                } else if (res == "3") {
+                    success = SetLayout("fr_FR");
+                } else {
+                    success = false;
                 }
 
                 if (success) break;
@@ -89,22 +87,28 @@ Your Selection: ");
         }
 
         public bool SetLayout(string layoutName) {
-            if (layoutName == "en_US" || layoutName == "de_DE" || layoutName == "fr_FR") return false;
+            Kernel.Instance.mDebugger.Send("layout selected: " + layoutName);
+            if (!(layoutName == "en_US" || layoutName == "de_DE" || layoutName == "fr_FR")) return false;
 
-            cfg.Options["layout"] = layoutName;
+            Kernel.Instance.mDebugger.Send("sl1 " + (cfg == null ? "t" : "f"));
+            if(cfg != null) Kernel.Instance.mDebugger.Send((cfg.Options == null ? "t" : "f"));
+            cfg.Options.Set("layout", layoutName);
 
-            switch(layoutName) {
-                case "en_US":
-                    KeyboardManager.SetKeyLayout(new Cosmos.System.ScanMaps.US_Standard());
-                    break;
-                case "de_DE":
-                    KeyboardManager.SetKeyLayout(new Cosmos.System.ScanMaps.DE_Standard());
-                    break;
-                case "fr_FR":
-                    KeyboardManager.SetKeyLayout(new Cosmos.System.ScanMaps.FR_Standard());
-                    break;
-
+            Kernel.Instance.mDebugger.Send("sl2");
+            if (layoutName == "en_US")
+            {
+                KeyboardManager.SetKeyLayout(new Cosmos.System.ScanMaps.US_Standard());
+            }else if(layoutName == "de_DE")
+            {
+                Kernel.Instance.mDebugger.Send("sl3");
+                KeyboardManager.SetKeyLayout(new Cosmos.System.ScanMaps.DE_Standard());
+            }else if(layoutName == "fr_FR")
+            {
+                KeyboardManager.SetKeyLayout(new Cosmos.System.ScanMaps.FR_Standard());
             }
+
+            Kernel.Instance.mDebugger.Send("sl4");
+
             return true;
         }
 

@@ -1,6 +1,7 @@
 ﻿using EtorumOS.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,12 @@ namespace EtorumOS {
             reservedFiles.Add(path);
         }
 
-        public static bool UserCanAccess(User user, string path) {
+        public static bool UserCanWrite(User user, string path) {
+            return !reservedFiles.Contains(path);
+        }
+
+        public static bool CurrentUserCanWrite(string path)
+        {
             return !reservedFiles.Contains(path);
         }
     }
