@@ -32,14 +32,22 @@ namespace EtorumOS {
         }
 
         public void Set(TK key, TV value) {
+            Kernel.Instance.mDebugger.Send("dictset1");
             foreach (var entry in entries) {
+                Kernel.Instance.mDebugger.Send("dictset2 " + (entry == null ? "t" : "f"));
+                Kernel.Instance.mDebugger.Send("dictset2.1 " + (entry.key == null ? "t" : "f"));
                 if (entry.key.CompareTo(key) == 0) {
+                    Kernel.Instance.mDebugger.Send("dictset3");
                     entry.value = value;
+                    Kernel.Instance.mDebugger.Send("dictset6");
                     return;
                 }
             }
 
+            Kernel.Instance.mDebugger.Send("dictset4");
             entries.Add(new(key, value));
+
+            Kernel.Instance.mDebugger.Send("dictset5");
         }
 
         public bool Remove(TK key) {

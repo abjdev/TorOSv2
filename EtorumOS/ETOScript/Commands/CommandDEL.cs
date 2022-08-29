@@ -20,6 +20,12 @@ namespace EtorumOS.ETOScript.Commands {
                 return;
             }
 
+            if(!EtorumIO.CurrentUserCanWrite(tempPath))
+            {
+                Helpers.WriteLine(ConsoleColor.Red, "Permission denied.");
+                return;
+            }
+
             File.Delete(tempPath);
         }
 
