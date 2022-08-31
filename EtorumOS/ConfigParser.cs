@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace EtorumOS {
     internal class ConfigParser {
-        public CustomDict<string, string> Options { get; set; } = new();
+        public CustomDictString Options { get; set; } = new();
 
         public void Load(string data) {
             string[] lines = data.Split(new string[] { "\r\n", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach(string line in lines) {
-                string[] parts = line.Split('=');
+                string[] parts = line.Split('=', StringSplitOptions.RemoveEmptyEntries);
 
                 if (parts.Length != 2) continue;
 
@@ -27,7 +27,7 @@ namespace EtorumOS {
                 res += kvp.key + "=" + kvp.value + "\n";
             }
 
-            return res;
+            return res.Substring(0, res.Length-1);
         }
     }
 

@@ -6,17 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-/**
- * <summary>
- *  Only supports types that inherit IComparable
- * </summary>
- */
 namespace EtorumOS {
-    public class CustomDict<TK, TV> : IEnumerable where TK : IComparable {
-        private List<CustomDictEntry<TK, TV>> entries = new();
+    public class CustomDictString {
+        private List<CustomDictEntry<string, string>> entries = new();
         public int Count => entries.Count;
 
-        public void Add(TK key, TV value) {
+        public void Add(string key, string value) {
             if (key == null || value == null) {
                 return;
             }
@@ -24,37 +19,29 @@ namespace EtorumOS {
             entries.Add(new(key, value));
         }
 
-        public TV Get(TK key) {
+        public string Get(string key) {
             foreach (var entry in entries) {
-                if (entry.key.CompareTo(key) == 0) return entry.value;
+                if (entry.key == key) return entry.value;
             }
 
             throw new NullReferenceException("CustomDict does not include key");
         }
 
-        public void Set(TK key, TV value) {
-            Kernel.Instance.mDebugger.Send("dictset1");
+        public void Set(string key, string value) {
             foreach (var entry in entries) {
-                Kernel.Instance.mDebugger.Send("dictset2 " + (entry == null ? "t" : "f"));
-                Kernel.Instance.mDebugger.Send("dictset2.1 " + (entry.key == null ? "t" : "f"));
-                if (entry.key.CompareTo(key) == 0) {
-                    Kernel.Instance.mDebugger.Send("dictset3");
+                if (entry.key == key) {
                     entry.value = value;
-                    Kernel.Instance.mDebugger.Send("dictset6");
                     return;
                 }
             }
 
-            Kernel.Instance.mDebugger.Send("dictset4");
             entries.Add(new(key, value));
-
-            Kernel.Instance.mDebugger.Send("dictset5");
         }
 
-        public bool Remove(TK key) {
+        public bool Remove(string key) {
             int i = 0;
             foreach (var entry in entries) {
-                if (entry.key.CompareTo(key) == 0) {
+                if (entry.key == key) {
                     entries.RemoveAt(i);
                     return true;
                 }
@@ -65,7 +52,7 @@ namespace EtorumOS {
             return false;
         }
 
-        public TV GetAt(int idx) {
+        public string GetAt(int idx) {
             return entries[idx].value;
         }
 
@@ -74,10 +61,10 @@ namespace EtorumOS {
             entries.RemoveAt(idx);
         }
 
-        public int IndexOf(TK key) {
+        public int IndexOf(string key) {
             int i = 0;
             foreach (var entry in entries) {
-                if (entry.key.CompareTo(key) == 0) {
+                if (entry.key == key) {
                     entries.RemoveAt(i);
                     return i;
                 }
@@ -88,28 +75,19 @@ namespace EtorumOS {
             return -1;
         }
 
-        public bool Contains(TK key) {
-            Kernel.Instance.mDebugger.Send("dict1");
-
+        public bool Contains(string key) {
             foreach (var entry in entries) {
-                Kernel.Instance.mDebugger.Send("dict2");
-                Kernel.Instance.mDebugger.Send(entry == null ? "dict_t1" : "dict_f1");
-                Kernel.Instance.mDebugger.Send(entry.key == null ? "dict_t2 " + entry.key : "dict_f2 " + entry.key);
-
-                if (entry.key.CompareTo(key) == 0) {
-                    Kernel.Instance.mDebugger.Send("dict3");
+                if (entry.key == key) {
                     return true;
                 }
-                Kernel.Instance.mDebugger.Send("dict4");
             }
 
-            Kernel.Instance.mDebugger.Send("dict5");
             return false;
         }
 
-        public bool TryGet(TK key, out TV val) {
+        public bool TryGet(string key, out string val) {
             foreach (var entry in entries) {
-                if (entry.key.CompareTo(key) == 0) {
+                if (entry.key == key) {
                     val = entry.value;
                     return true;
                 } else {
@@ -120,11 +98,11 @@ namespace EtorumOS {
             return false;
         }
 
-        public List<TV> AsValueList() {
+        public List<string> AsValueList() {
             return (from entry in entries select entry.value).ToList();
         }
 
-        public List<TK> AsKeyList() {
+        public List<string> AsKeyList() {
             return (from entry in entries select entry.key).ToList();
         }
 
@@ -132,23 +110,13 @@ namespace EtorumOS {
             return entries.GetEnumerator();
         }
 
-        public TV this[TK key] {
+        public string this[string key] {
             get => Get(key);
             set => Set(key, value);
         }
 
         public bool IsEntriesNull() {
             return entries == null;
-        }
-    }
-
-    public class CustomDictEntry<TK, TV> where TK : IComparable {
-        public TK key;
-        public TV value;
-
-        public CustomDictEntry(TK key, TV value) {
-            this.key = key;
-            this.value = value;
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Cosmos.System;
 using Console = System.Console;
+using EtorumOS.KeyboardLayouts;
 
 namespace EtorumOS.Services {
     internal class KeyboardLayoutService : Service {
@@ -101,7 +102,7 @@ Your Selection: ");
             }else if(layoutName == "de_DE")
             {
                 Kernel.Instance.mDebugger.Send("sl3");
-                KeyboardManager.SetKeyLayout(new Cosmos.System.ScanMaps.DE_Standard());
+                KeyboardManager.SetKeyLayout(new DE_Fixed());
             }else if(layoutName == "fr_FR")
             {
                 KeyboardManager.SetKeyLayout(new Cosmos.System.ScanMaps.FR_Standard());

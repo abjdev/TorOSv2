@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using Cosmos.HAL;
 
 namespace EtorumOS.Services {
     internal class UserAccountService : Service {
@@ -48,6 +49,47 @@ namespace EtorumOS.Services {
             }
 
             File.WriteAllText(userDBLocation, final);
+        }
+
+        public void StartAuthenticationProcess()
+        {
+            User = null;
+            while (true)
+            {
+                Console.Write("Name: ");
+                string username = Console.ReadLine();
+                Console.Write("Password: ");
+                string password = Console.ReadLine();
+
+                if (TryAuthenticate(username, password)) break;
+                else
+                {
+                    Console.WriteLine("Invalid name or password. Try again");
+                }
+            }
+
+            if(!Directory.Exists($@"0:\users\{User.Name}\"))
+            {
+                Directory.CreateDirectory($@"0:\users\{User.Name}\");
+            }
+
+            if(!File.Exists($@"0:\users\{User.Name}\autorun.etos"))
+            {
+                File.Create($@"0:\users\{User.Name}\autorun.etos").Close();
+            }
+
+            string c = File.ReadAllText($@"0:\users\{User.Name}\autorun.etos");
+            Kernel.Instance.RunCommands(c);
+
+            Kernel.Instance.CurrentPath = $@"0:\users\{User.Name}\";
+            Kernel.Instance.EnvironmentVars["USER"] = User.Name;
+
+            Console.WriteLine("Welcome, " + User.Name + "!");
+
+            if (User.Password == "root")
+            {
+                Helpers.WriteLine(ConsoleColor.Yellow, "Warning! It seems like you are using the default password, 'root'. This is not recommended. Use 'setpassword root <your password>'");
+            }
         }
 
         public User GetUser(string name) {

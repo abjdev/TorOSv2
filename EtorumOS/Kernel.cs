@@ -19,8 +19,10 @@ namespace EtorumOS {
         public string CurrentPath { get; set; } = @"0:\";
         public List<Command> Commands { get; private set; } = new() {
             new CommandCD(), new CommandMKDIR(), new CommandLS(), new CommandREAD(), new CommandSetKeyboardLayout(),
-            new CommandDEL()
+            new CommandDEL(), new CommandSetPassword(), new CommandEDIT()
         };
+
+        public CustomDictString EnvironmentVars = new();
 
         protected override void BeforeRun() {
             Instance = this;
@@ -38,6 +40,7 @@ namespace EtorumOS {
 
             new UserAccountService();
             new KeyboardLayoutService();
+            new PITService();
 
             Console.WriteLine("[init] Done!");
 
@@ -45,49 +48,7 @@ namespace EtorumOS {
 
             Console.WriteLine("\n" + Resources.ResourceManager.Banner);
 
-            /*PITTimer pt = new(() => {
-                int origTop = Console.CursorTop;
-                int origLeft = Console.CursorLeft;
-                ConsoleColor origFColor = Console.ForegroundColor;
-                ConsoleColor origBColor = Console.BackgroundColor;
-
-                Console.CursorVisible = false;
-                Console.CursorTop = 0;
-                Console.CursorLeft = 0;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.BackgroundColor = ConsoleColor.Gray;
-
-                string timeStr = RTC.Hour.ToString("00") + ":" + RTC.Minute.ToString("00") + ":" + RTC.Second.ToString("00") + "   " + RTC.DayOfTheMonth.ToString("00") + "/" + RTC.Month.ToString("00") + "/" + RTC.Year.ToString("00");
-
-                Console.Write(timeStr + " ".Repeat(Console.WindowWidth - timeStr.Length));
-
-                Console.CursorTop = Math.Min(Console.WindowHeight-1, origTop);
-                Console.CursorLeft = Math.Min(Console.WindowWidth-1, origLeft);
-                Console.CursorVisible = true;
-                Console.ForegroundColor = origFColor;
-                Console.BackgroundColor = origBColor;
-            }, 1000 * 1000 * 20, true);
-
-            Global.PIT.RegisterTimer(pt);*/
-
-            while (true) {
-                Console.Write("Name: ");
-                string username = Console.ReadLine();
-                Console.Write("Password: ");
-                string password = Console.ReadLine();
-
-                if (UserAccountService.Instance.TryAuthenticate(username, password)) break;
-                else {
-                    Global.PIT.WaitNS(2000000000);
-                    Console.WriteLine("Invalid name or password. Try again");
-                }
-            }
-
-            Console.WriteLine("Welcome, " + UserAccountService.Instance.User.Name + "!");
-
-            if(UserAccountService.Instance.User.Password == "root") {
-                Helpers.WriteLine(ConsoleColor.Yellow, "Warning! It seems like you are using the default password, 'root'. This is not recommended. Use 'setpassword root <your password>'");
-            }
+            UserAccountService.Instance.StartAuthenticationProcess();
         }
 
         protected override void Run() {
