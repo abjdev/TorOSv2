@@ -29,8 +29,6 @@ namespace EtorumOS.ETOScript.Commands {
             File.Delete(tempPath);
         }
 
-        public override string GetName() {
-            return "del";
-        }
+        public override string Name => "del";
     }
 }

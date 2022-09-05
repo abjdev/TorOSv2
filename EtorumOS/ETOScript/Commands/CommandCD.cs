@@ -15,6 +15,12 @@ namespace EtorumOS.ETOScript.Commands {
 
             string tempPath = Path.GetFullPath(Path.Combine(Kernel.Instance.CurrentPath, args[1]));
 
+            if(tempPath.EndsWith(".."))
+            {
+                string[] parts = tempPath.Split('\\');
+                tempPath = parts.Take(parts.Length - 2).Join("\\");
+            }
+
             if(!Directory.Exists(tempPath)) {
                 Helpers.WriteLine(ConsoleColor.Red, "Path was not found. (was looking for " + tempPath + ")");
                 return;
@@ -23,8 +29,6 @@ namespace EtorumOS.ETOScript.Commands {
             Kernel.Instance.CurrentPath = tempPath;
         }
 
-        public override string GetName() {
-            return "cd";
-        }
+        public override string Name => "cd";
     }
 }

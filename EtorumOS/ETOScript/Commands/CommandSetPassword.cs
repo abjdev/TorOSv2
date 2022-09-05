@@ -39,8 +39,6 @@ namespace EtorumOS.ETOScript.Commands {
             }
         }
 
-        public override string GetName() {
-            return "setpassword";
-        }
+        public override string Name => "setpassword";
     }
 }

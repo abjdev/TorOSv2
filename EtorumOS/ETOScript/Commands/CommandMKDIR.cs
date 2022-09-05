@@ -17,8 +17,6 @@ namespace EtorumOS.ETOScript.Commands {
             Directory.CreateDirectory(tempPath);
         }
 
-        public override string GetName() {
-            return "mkdir";
-        }
+        public override string Name => "mkdir";
     }
 }

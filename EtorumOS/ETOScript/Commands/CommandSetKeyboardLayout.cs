@@ -17,8 +17,6 @@ namespace EtorumOS.ETOScript.Commands {
             KeyboardLayoutService.Instance.ShowSelection();
         }
 
-        public override string GetName() {
-            return "setkblayout";
-        }
+        public override string Name => "setkblayout";
     }
 }

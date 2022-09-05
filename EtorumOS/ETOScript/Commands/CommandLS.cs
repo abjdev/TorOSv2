@@ -24,8 +24,6 @@ namespace EtorumOS.ETOScript.Commands {
             }
         }
 
-        public override string GetName() {
-            return "ls";
-        }
+        public override string Name => "ls";
     }
 }

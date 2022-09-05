@@ -13,17 +13,31 @@
         <StartCosmosGDB>True</StartCosmosGDB>
         <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
         <CosmosDebugPort>Serial: COM1</CosmosDebugPort>
-        <Launch>VMware</Launch>
+        <Launch>ISO</Launch>
         <Profile>VMware</Profile>
         <Description>Use VMware Player or Workstation to deploy and debug.</Description>
         <PxeInterface>192.168.0.8</PxeInterface>
         <TraceMode>All</TraceMode>
+        <DebugEnabled>False</DebugEnabled>
+        <CompressionType>None</CompressionType>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Cosmos.Build" Version="0-*" NoWarn="NU1604" />
         <PackageReference Include="Cosmos.Debug.Kernel" Version="0-*" NoWarn="NU1604" />
         <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />
+    </ItemGroup>
+
+	<ItemGroup>
+		<PlugsReference Include="$(MSBuildProjectDirectory)\..\EtorumOS.Plugs\bin\Debug\net6.0\EtorumOS.Plugs.dll"></PlugsReference>
+	</ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Plugs\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\ConsoleDraw\Source\ConsoleDraw\ConsoleDraw.csproj" />
     </ItemGroup>
 
 </Project>

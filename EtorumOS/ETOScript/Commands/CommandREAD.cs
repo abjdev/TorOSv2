@@ -23,8 +23,6 @@ namespace EtorumOS.ETOScript.Commands {
             Console.WriteLine(File.ReadAllText(tempPath));
         }
 
-        public override string GetName() {
-            return "read";
-        }
+        public override string Name => "read";
     }
 }

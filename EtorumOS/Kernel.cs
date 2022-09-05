@@ -19,7 +19,7 @@ namespace EtorumOS {
         public string CurrentPath { get; set; } = @"0:\";
         public List<Command> Commands { get; private set; } = new() {
             new CommandCD(), new CommandMKDIR(), new CommandLS(), new CommandREAD(), new CommandSetKeyboardLayout(),
-            new CommandDEL(), new CommandSetPassword(), new CommandEDIT()
+            new CommandDEL(), new CommandSetPassword(), new CommandCEDIT()
         };
 
         public CustomDictString EnvironmentVars = new();
@@ -88,12 +88,12 @@ namespace EtorumOS {
 
                 bool foundCmd = false;
                 foreach (Command icmd in Commands) {
-                    if (icmd.GetName() == args[0]) {
+                    if (icmd.Name == args[0]) {
                         try {
                             icmd.Execute(args);
                             mDebugger.Send("Running CMD");
                         }catch(Exception ex) {
-                            Console.WriteLine("Executing " + args[0] + " failed: " + ex.ToString());
+                            Console.WriteLine("Executing " + args[0] + " failed: " + ex.ToString() + "\n" + ex.Message);
                         }
                         foundCmd = true;
                         break;
