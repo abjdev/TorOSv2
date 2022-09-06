@@ -3,7 +3,7 @@ EtorumOS is a simple C# CLI OS using COSMOS
 
 ## How do I use EtorumOS?
 As of now, there aren't any public builds. To use EtorumOS, please install the COSMOS DevKit and then build the project yourself.
-#### Warning: This OS, and any CosmosOS in general is not safe to use on real machines. Use a VM.
+#### Warning: This OS, and any CosmosOS in general are not safe to use on real machines. Use a VM.
 
 ## EtorumOS basics
 EtorumOS uses a CLI to accept commands. It also has an user account system (UAS). The CLI interprets a very basic language called ETOScript - it only features string parsing and executing (multiple) commands and this will probably stay like that. Commands that you can are, for example, `cd, ls, read, setpassword, cedit` and more!
