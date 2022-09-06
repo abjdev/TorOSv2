@@ -36,8 +36,4 @@
       <Folder Include="Plugs\" />
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\ConsoleDraw\Source\ConsoleDraw\ConsoleDraw.csproj" />
-    </ItemGroup>
-
 </Project>
