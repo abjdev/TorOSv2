@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace EtorumOS {
@@ -11,16 +12,31 @@ namespace EtorumOS {
         public static List<string> reservedFiles = new() { };
 
         public static void RegisterReserved(string path) {
-            reservedFiles.Add(path);
+            reservedFiles.Add(Sanitize(path));
         }
 
-        public static bool UserCanWrite(User user, string path) {
-            return !reservedFiles.Contains(path);
+        public static bool UserCan(User user, PermissionType perm, string path) {
+            return !reservedFiles.Contains(Sanitize(path));
         }
 
-        public static bool CurrentUserCanWrite(string path)
+        public static bool CurrentUserCan(PermissionType perm, string path)
         {
-            return !reservedFiles.Contains(path);
+            return UserCan(UserAccountService.Instance.User, perm, path);
         }
+
+        internal static string Sanitize(string path) {
+            string output = "";
+
+            foreach(char chr in path) {
+                if (char.IsLetterOrDigit(chr)) output += chr;
+            }
+
+            return output;
+        }
+    }
+
+    public enum PermissionType {
+        READ_FILE,
+        WRITE_FILE
     }
 }

@@ -20,7 +20,7 @@ namespace EtorumOS.ETOScript.Commands {
                 return;
             }
 
-            if(!EtorumIO.CurrentUserCanWrite(tempPath))
+            if(!EtorumIO.CurrentUserCan(PermissionType.WRITE_FILE, tempPath))
             {
                 Helpers.WriteLine(ConsoleColor.Red, "Permission denied.");
                 return;

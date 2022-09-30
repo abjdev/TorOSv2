@@ -19,7 +19,7 @@ namespace EtorumOS {
         public string CurrentPath { get; set; } = @"0:\";
         public List<Command> Commands { get; private set; } = new() {
             new CommandCD(), new CommandMKDIR(), new CommandLS(), new CommandREAD(), new CommandSetKeyboardLayout(),
-            new CommandDEL(), new CommandSetPassword(), new CommandCEDIT()
+            new CommandDEL(), new CommandSetPassword(), new CommandCEDIT(), new CommandDebug()
         };
 
         public CustomDictString EnvironmentVars = new();

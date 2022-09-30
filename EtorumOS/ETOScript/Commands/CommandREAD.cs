@@ -20,6 +20,11 @@ namespace EtorumOS.ETOScript.Commands {
                 return;
             }
 
+            if(!EtorumIO.CurrentUserCan(PermissionType.READ_FILE, tempPath)) {
+                Helpers.WriteLine(ConsoleColor.Red, "Access to file is denied.");
+                return;
+            }
+
             Console.WriteLine(File.ReadAllText(tempPath));
         }
 

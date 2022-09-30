@@ -31,6 +31,11 @@ namespace EtorumOS.ETOScript.Commands {
                 return;
             }
 
+            if (!EtorumIO.CurrentUserCan(PermissionType.WRITE_FILE, tempPath)) {
+                Helpers.WriteLine(ConsoleColor.Red, "Access to file is denied.");
+                return;
+            }
+
             Console.WriteLine("Welcome to CEdit, your command based editor! \nCEdit uses ETOScript syntax.");
             Console.WriteLine("To get started, do 'show' to show all lines.");
             filePath = tempPath;
