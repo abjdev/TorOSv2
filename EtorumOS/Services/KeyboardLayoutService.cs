@@ -22,34 +22,23 @@ namespace EtorumOS.Services {
 
         public override void Init() {
             Kernel.Instance.mDebugger.Send("1");
-            if (!File.Exists(cfgLoc)) {
+            if (!File.Exists(cfgLoc)) { // Config doesnt exist, save an empty one first and then allow the user to select a layout
                 cfg = new();
-                Kernel.Instance.mDebugger.Send(SetLayout("en_US") ? "init t" : "init f");
                 File.WriteAllText(cfgLoc, cfg.Save());
 
                 Console.WriteLine("== FIRST SETUP ==");
                 ShowSelection();
-            }else {
-                Kernel.Instance.mDebugger.Send("a1");
+            }else { // Config exists, load it
                 cfg = new();
-                Kernel.Instance.mDebugger.Send("a2");
                 cfg.Load(File.ReadAllText(cfgLoc));
 
-                Kernel.Instance.mDebugger.Send("a3");
-                Kernel.Instance.mDebugger.Send(cfg == null ? "t1" : "f1");
-                Kernel.Instance.mDebugger.Send(cfg.Options == null ? "t2" : "f2");
-                Kernel.Instance.mDebugger.Send(cfg.Options.IsEntriesNull() ? "t3" : "f3");
-
-                if (!cfg.Options.Contains("layout")) {
-                    Kernel.Instance.mDebugger.Send("a4");
-                    if(!SetLayout("en_US")) ShowSelection();
+                if (!cfg.Options.Contains("layout")) { // The config is unfinished and doesn't contain a layout, default to en_US
+                    if(!SetLayout("en_US")) ShowSelection(); // Show selection if en_US can not be used for some reason
                 }
                 else {
-                    Kernel.Instance.mDebugger.Send("a5");
-                    if (!SetLayout((string)cfg.Options["layout"])) ShowSelection();
+                    if (!SetLayout((string)cfg.Options["layout"])) ShowSelection(); // layout key was found in config, set the layout to it or if the layout is
+                                                                                    // is invalid, show the selection
                 }
-
-                Kernel.Instance.mDebugger.Send("a6");
             }
 
             EtorumIO.RegisterReserved(cfgLoc);

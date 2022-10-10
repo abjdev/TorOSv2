@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace EtorumOS {
-    internal struct BitField8 {
+    internal struct BitField8 { // should work but unused
         public byte data;
 
         public BitField8() {
