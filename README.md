@@ -12,7 +12,7 @@ EtorumOS uses a CLI to accept commands. It also has an user account system (UAS)
 
 #### CEdit (CommandEdit)
 CEdit is an editor that is controlled by using commands. And I am gonna be honest, I just failed at implementing a proper editor lol  
-CEdit has a `help` command that shows you all commands available. CEdit itself also interpret ETOScript but it **only** includes CEdit commands.
+CEdit has a `help` command that shows you all commands available. CEdit itself also interprets ETOScript but it **only** includes CEdit commands.
 
 #### Path limitations
 As of now, only navigating using `cd` supports the .. "operator" to go back a folder. A proper path parsing implementation will be added soon.
