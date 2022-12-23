@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EtorumOS {
     internal class ConfigParser {
-        public CustomDictString Options { get; set; } = new();
+        public Dictionary<string, string> Options { get; set; } = new();
 
         public void Load(string data) {
             string[] lines = data.Split(new string[] { "\r\n", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
@@ -23,11 +23,11 @@ namespace EtorumOS {
         public string Save() {
             string res = "";
 
-            foreach(CustomDictEntry<string, string> kvp in Options) {
-                res += kvp.key + "=" + kvp.value + "\n";
+            foreach(KeyValuePair<string, string> kvp in Options) {
+                res += kvp.Key + "=" + kvp.Value + "\n";
             }
 
-            return res.Substring(0, res.Length-1);
+            return res.Substring(0, Math.Max(0, res.Length-1));
         }
     }
 

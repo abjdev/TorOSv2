@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Cosmos.HAL;
+using EtorumOS.Cryptography;
 
 namespace EtorumOS.Services {
     internal class UserAccountService : Service {
@@ -21,10 +22,13 @@ namespace EtorumOS.Services {
 
         public override void Init() {
             if(!File.Exists(userDBLocation)) {
-                File.WriteAllText(userDBLocation, "root;root;1");
+                File.WriteAllText(userDBLocation, "");
+                LoadUsers();
+                AddUser("root", "root", true);
+                return;
             }
 
-            EtorumIO.RegisterReserved(userDBLocation);
+            //EtorumIO.RegisterReserved(userDBLocation); 
             LoadUsers();
         }
 
@@ -45,7 +49,7 @@ namespace EtorumOS.Services {
             string final = "";
 
             foreach(User user in users) {
-                final += $"{user.Name};{user.Password};{(user.IsSuperUser ? "1" : "0")}";
+                final += $"{user.Name};{user.Password};{(user.IsSuperUser ? "1" : "0")}\r\n";
             }
 
             File.WriteAllText(userDBLocation, final);
@@ -54,17 +58,18 @@ namespace EtorumOS.Services {
         public void StartAuthenticationProcess()
         {
             User = null;
+
             while (true)
             {
-                Console.Write("Name: ");
+                EtorumConsole.Write("Name: ");
                 string username = Console.ReadLine();
-                Console.Write("Password: ");
+                EtorumConsole.Write("Password: ");
                 string password = Console.ReadLine();
 
                 if (TryAuthenticate(username, password)) break;
                 else
                 {
-                    Console.WriteLine("Invalid name or password. Try again");
+                    EtorumConsole.WriteLine("Invalid name or password. Try again");
                 }
             }
 
@@ -84,7 +89,7 @@ namespace EtorumOS.Services {
             Kernel.Instance.CurrentPath = $@"0:\users\{User.Name}\";
             Kernel.Instance.EnvironmentVars["USER"] = User.Name;
 
-            Console.WriteLine("Welcome, " + User.Name + "!");
+            EtorumConsole.WriteLine("Welcome, " + User.Name + "!");
 
             if (User.Password == "root")
             {
@@ -102,11 +107,20 @@ namespace EtorumOS.Services {
             return null;
         }
 
+        public void AddUser(string name, string pass, bool isSuper) {
+            AddUser(new User() { Name = name, Password = MD5.Calculate(Encoding.UTF8.GetBytes(pass)), IsSuperUser = isSuper });
+        }
+
+        private void AddUser(User user) {
+            users.Add(user);
+            SaveUsers();
+        }
+
         public bool TryAuthenticate(string name, string password) {
             User user = GetUser(name);
 
             if (user == null) return false;
-            if (user.Password != password) return false;
+            if (user.Password != MD5.Calculate(Encoding.UTF8.GetBytes(password))) return false;
 
             User = user;
             return true;

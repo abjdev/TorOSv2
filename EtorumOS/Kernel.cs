@@ -10,6 +10,7 @@ using EtorumOS.ETOScript;
 using static Cosmos.HAL.PIT;
 using Cosmos.HAL;
 using EtorumOS.ETOScript.Commands;
+using Cosmos.Core;
 
 namespace EtorumOS {
     public class Kernel : Sys.Kernel {
@@ -22,33 +23,44 @@ namespace EtorumOS {
             new CommandDEL(), new CommandSetPassword(), new CommandCEDIT(), new CommandDebug()
         };
 
-        public CustomDictString EnvironmentVars = new();
+        public Dictionary<string, string> EnvironmentVars = new();
 
         protected override void BeforeRun() {
             Instance = this;
 
-            Console.Clear();
-            Console.WriteLine("[init] Loading VFS...");
-            VFSManager.RegisterVFS(vfs);
-            Console.WriteLine("[init] Check OS files...");
+            try {
 
-            if(!Directory.Exists(@"0:\os")) {
-                Directory.CreateDirectory(@"0:\os");
+                Console.Clear();
+                EtorumConsole.WriteLine("[init] Loading VFS...");
+                VFSManager.RegisterVFS(vfs, true, true);
+                EtorumConsole.WriteLine("[init] Check OS files...");
+
+                if (!Directory.Exists(@"0:\os")) {
+                    Directory.CreateDirectory(@"0:\os");
+                }
+
+                EtorumConsole.WriteLine("[init] Initiliaze services...");
+
+                EtorumConsole.WriteLine("[init] Initiliaze UserAccountService...");
+                new UserAccountService();
+                EtorumConsole.WriteLine("[init] Initiliaze KeyboardLayoutService...");
+                new KeyboardLayoutService();
+                EtorumConsole.WriteLine("[init] Initiliaze PITService...");
+                new PITService();
+
+                EtorumConsole.WriteLine("[init] Done!");
+
+                Console.Clear();
+
+                EtorumConsole.WriteLine("\n" + Resources.ResourceManager.Banner);
+
+                UserAccountService.Instance.StartAuthenticationProcess();
+            }catch(Exception ex) {
+                mDebugger.Send("Exception occurred during init");
+                //mDebugger.Send(ex.Message);
+                Panic(ex, "INITILIZATION");
+                while (true) { }
             }
-
-            Console.WriteLine("[init] Initiliaze services...");
-
-            new UserAccountService();
-            new KeyboardLayoutService();
-            new PITService();
-
-            Console.WriteLine("[init] Done!");
-
-            Console.Clear();
-
-            Console.WriteLine("\n" + Resources.ResourceManager.Banner);
-
-            UserAccountService.Instance.StartAuthenticationProcess();
         }
 
         protected override void Run() {
@@ -59,23 +71,30 @@ namespace EtorumOS {
                 string cliIn = Console.ReadLine();
                 RunCommands(cliIn);
             }catch(Exception ex) {
-                Panic(ex);
-                while (true) ;
+                mDebugger.Send("Exception occurred during main loop");
+                //mDebugger.Send(ex.Message);
+                Panic(ex, "MAIN LOOP");
+                while (true) { }
             }
         }
 
-        private void Panic(Exception ex) {
+        private void Panic(Exception ex, string task = "UNSPECIFIED") {
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.DarkRed;
             
-            for(int y = 0; y < Console.WindowHeight; y++) {
-                Console.Write(" ".Repeat(Console.WindowWidth));
-            }
+            /*for(int y = 0; y < Console.WindowHeight; y++) {
+                EtorumConsole.Write(" ".Repeat(Console.WindowWidth));
+            }*/
 
-            Console.CursorTop = 0;
-            Console.CursorLeft = 0;
-            Console.WriteLine("** ETORUM PANIC **");
-            Console.WriteLine(ex.ToString());
+            //Console.CursorTop = 0;
+            //Console.CursorLeft = 0;
+            EtorumConsole.WriteLine("** ETORUM PANIC during " + task + "**");
+            EtorumConsole.WriteLine(ex.ToString());
+        }
+
+        private void IntCrash(string intCrashName) {
+            Panic(new Exception(intCrashName), "UNKNOWN");
+            while (true) ;
         }
 
         public void RunCommands(string code) {
@@ -86,6 +105,8 @@ namespace EtorumOS {
 
                 if (args.Length < 1) return;
 
+                mDebugger.Send(string.Join(", ", args));
+
                 bool foundCmd = false;
                 foreach (Command icmd in Commands) {
                     if (icmd.Name == args[0]) {
@@ -93,7 +114,7 @@ namespace EtorumOS {
                             icmd.Execute(args);
                             mDebugger.Send("Running CMD");
                         }catch(Exception ex) {
-                            Console.WriteLine("Executing " + args[0] + " failed: " + ex.ToString() + "\n" + ex.Message);
+                            EtorumConsole.WriteLine("Executing " + args[0] + " failed: " + ex.ToString() + "\n" + ex.Message);
                         }
                         foundCmd = true;
                         break;
@@ -107,12 +128,12 @@ namespace EtorumOS {
                         RunCommands(File.ReadAllText(args[0].Replace("./", "")));
                         continue;
                     }else {
-                        Console.WriteLine("Can not run " + args[0] + ": File not found");
+                        EtorumConsole.WriteLine("Can not run " + args[0] + ": File not found");
                         return;
                     }
                 }
 
-                Console.WriteLine("Command \"" + args[0] + "\" not found.");
+                EtorumConsole.WriteLine("Command \"" + args[0] + "\" not found.");
             }
         }
     }

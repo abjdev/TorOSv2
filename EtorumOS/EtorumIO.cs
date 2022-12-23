@@ -12,11 +12,13 @@ namespace EtorumOS {
         public static List<string> reservedFiles = new() { };
 
         public static void RegisterReserved(string path) {
-            reservedFiles.Add(Sanitize(path));
+            reservedFiles.Add(SanitizePermissionPath(path));
         }
 
         public static bool UserCan(User user, PermissionType perm, string path) {
-            return !reservedFiles.Contains(Sanitize(path));
+            bool isReserved = reservedFiles.ContainsString(SanitizePermissionPath(path));
+            Kernel.Instance.mDebugger.Send(path + " | IsReserved: " + isReserved);
+            return !isReserved;
         }
 
         public static bool CurrentUserCan(PermissionType perm, string path)
@@ -24,14 +26,15 @@ namespace EtorumOS {
             return UserCan(UserAccountService.Instance.User, perm, path);
         }
 
-        internal static string Sanitize(string path) {
+        internal static string SanitizePermissionPath(string path) {
             string output = "";
 
             foreach(char chr in path) {
                 if (char.IsLetterOrDigit(chr)) output += chr;
             }
 
-            return output;
+            Kernel.Instance.mDebugger.Send("Sanitized (FOR PERM) Path: " + output);
+            return output.Trim();
         }
     }
 

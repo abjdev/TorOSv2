@@ -1,6 +1,8 @@
-﻿using EtorumOS.Services;
+﻿using EtorumOS.Cryptography;
+using EtorumOS.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -28,9 +30,9 @@ namespace EtorumOS.ETOScript.Commands {
                 return;
             }
 
-            target.Password = args[2];
+            target.Password = MD5.Calculate(Encoding.UTF8.GetBytes(args[2]));
             UserAccountService.Instance.SaveUsers();
-            Console.WriteLine("Password was changed.");
+            EtorumConsole.WriteLine("Password was changed.");
         
             if(target.Name == UserAccountService.Instance.User.Name)
             {

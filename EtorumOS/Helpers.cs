@@ -8,24 +8,38 @@ namespace EtorumOS {
     internal static class Helpers {
         public static void WriteLine(this ConsoleColor color, string text) {
             Console.ForegroundColor = color;
-            Console.WriteLine(text);
+            EtorumConsole.WriteLine(text);
             Console.ResetColor();
         }
 
         public static void Write(this ConsoleColor color, string text) {
             Console.ForegroundColor = color;
-            Console.Write(text);
+            EtorumConsole.Write(text);
             Console.ResetColor();
         }
 
-        public static string Join<T>(this IEnumerable<T> values, string sep) {
+        public static string Join<T>(this IEnumerable<T> values, string sep, bool trailing = false) {
             string output = "";
 
             foreach (object val in values) {
                 output += val.ToString() + sep;
             }
 
-            return output.Substring(0, Math.Max(0, output.Length - sep.Length)); 
+            return trailing ? output : output.Substring(0, Math.Max(0, output.Length - sep.Length)); 
+        }
+
+        /// <summary>
+        /// because for some reason List<string>.Contains does not work
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool ContainsString(this List<string> list, string value) {
+            foreach(string str in list) {
+                if (str == value) return true;
+            }
+
+            return false;
         }
 
         public static string Repeat(this string originalString, int amount) {

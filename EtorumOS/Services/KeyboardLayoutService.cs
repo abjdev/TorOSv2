@@ -23,16 +23,19 @@ namespace EtorumOS.Services {
         public override void Init() {
             Kernel.Instance.mDebugger.Send("1");
             if (!File.Exists(cfgLoc)) { // Config doesnt exist, save an empty one first and then allow the user to select a layout
+                Kernel.Instance.mDebugger.Send("1.1");
                 cfg = new();
+                Kernel.Instance.mDebugger.Send("1.2");
                 File.WriteAllText(cfgLoc, cfg.Save());
-
-                Console.WriteLine("== FIRST SETUP ==");
+                Kernel.Instance.mDebugger.Send("1.3");
+                EtorumConsole.WriteLine("== FIRST SETUP ==");
+                Kernel.Instance.mDebugger.Send("1.4");
                 ShowSelection();
             }else { // Config exists, load it
                 cfg = new();
                 cfg.Load(File.ReadAllText(cfgLoc));
 
-                if (!cfg.Options.Contains("layout")) { // The config is unfinished and doesn't contain a layout, default to en_US
+                if (!cfg.Options.ContainsKey("layout")) { // The config is unfinished and doesn't contain a layout, default to en_US
                     if(!SetLayout("en_US")) ShowSelection(); // Show selection if en_US can not be used for some reason
                 }
                 else {
@@ -46,8 +49,8 @@ namespace EtorumOS.Services {
 
         public void ShowSelection() {
             while (true) {
-                Console.WriteLine("Select a keyboard layout to use:");
-                Console.WriteLine(@"1. US/English Layout (en_US)
+                EtorumConsole.WriteLine("Select a keyboard layout to use:");
+                EtorumConsole.WriteLine(@"1. US/English Layout (en_US)
 2. German Layout (de_DE)
 3. French Layout (fr_FR)
 
@@ -70,7 +73,7 @@ Your Selection: ");
                 }
 
                 if (success) break;
-                if (!success) Console.WriteLine("Invalid selection. Try again.");
+                if (!success) EtorumConsole.WriteLine("Invalid selection. Try again.");
             }
 
             File.WriteAllText(cfgLoc, cfg.Save());
@@ -82,7 +85,7 @@ Your Selection: ");
 
             Kernel.Instance.mDebugger.Send("sl1 " + (cfg == null ? "t" : "f"));
             if(cfg != null) Kernel.Instance.mDebugger.Send((cfg.Options == null ? "t" : "f"));
-            cfg.Options.Set("layout", layoutName);
+            cfg.Options["layout"] = layoutName;
 
             Kernel.Instance.mDebugger.Send("sl2");
             if (layoutName == "en_US")

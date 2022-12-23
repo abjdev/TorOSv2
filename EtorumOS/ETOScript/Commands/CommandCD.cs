@@ -18,7 +18,7 @@ namespace EtorumOS.ETOScript.Commands {
             if(tempPath.EndsWith(".."))
             {
                 string[] parts = tempPath.Split('\\');
-                tempPath = parts.Take(parts.Length - 2).Join("\\");
+                tempPath = parts.Take(parts.Length - 2).Join("\\", true);
             }
 
             if(!Directory.Exists(tempPath)) {

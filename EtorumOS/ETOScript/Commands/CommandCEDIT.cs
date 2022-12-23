@@ -36,8 +36,8 @@ namespace EtorumOS.ETOScript.Commands {
                 return;
             }
 
-            Console.WriteLine("Welcome to CEdit, your command based editor! \nCEdit uses ETOScript syntax.");
-            Console.WriteLine("To get started, do 'show' to show all lines.");
+            EtorumConsole.WriteLine("Welcome to CEdit, your command based editor! \nCEdit uses ETOScript syntax.");
+            EtorumConsole.WriteLine("To get started, do 'show' to show all lines.");
             filePath = tempPath;
 
             lines = File.ReadAllLines(filePath).ToList();
@@ -50,8 +50,16 @@ namespace EtorumOS.ETOScript.Commands {
                 string cliIn = Console.ReadLine();
                 RunCommands(cliIn);
 
-                if (exit) break;
+                if (exit) {
+                    ResetState();
+                    break;
+                }
             }
+        }
+
+        private void ResetState() {
+            exit = false;
+            changed = false;
         }
 
         public void RunCommands(string code)
@@ -75,7 +83,7 @@ namespace EtorumOS.ETOScript.Commands {
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine("Executing " + args[0] + " failed: " + ex.ToString() + "\n" + ex.Message);
+                            EtorumConsole.WriteLine("Executing " + args[0] + " failed: " + ex.ToString() + "\n" + ex.Message);
                         }
                         foundCmd = true;
                         break;
@@ -93,12 +101,12 @@ namespace EtorumOS.ETOScript.Commands {
                     }
                     else
                     {
-                        Console.WriteLine("Can not run " + args[0] + ": File not found");
+                        EtorumConsole.WriteLine("Can not run " + args[0] + ": File not found");
                         return;
                     }
                 }
 
-                Console.WriteLine("Command \"" + args[0] + "\" not found.");
+                EtorumConsole.WriteLine("Command \"" + args[0] + "\" not found.");
             }
         }
 
@@ -138,7 +146,7 @@ namespace EtorumOS.ETOScript.Commands {
                 for(int i = lineIdx; i < lineIdx + lineCount; i++)
                 {
                     if (i >= cedit.lines.Count) break;
-                    Console.WriteLine(i + " > " + cedit.lines[i]);
+                    EtorumConsole.WriteLine(i + " > " + cedit.lines[i]);
                 }
             }
 
@@ -154,7 +162,7 @@ namespace EtorumOS.ETOScript.Commands {
             {
                 for (int i = 0; i < cedit.lines.Count; i++)
                 {
-                    Console.WriteLine(i + " > " + cedit.lines[i]);
+                    EtorumConsole.WriteLine(i + " > " + cedit.lines[i]);
                 }
             }
 
@@ -176,7 +184,7 @@ namespace EtorumOS.ETOScript.Commands {
                 }
 
                 cedit.lines[lineIdx] = args[2];
-                Console.WriteLine(lineIdx + " > " + cedit.lines[lineIdx]);
+                EtorumConsole.WriteLine(lineIdx + " > " + cedit.lines[lineIdx]);
                 cedit.changed = true;
             }
 
@@ -197,7 +205,7 @@ namespace EtorumOS.ETOScript.Commands {
                 }
 
                 cedit.lines[lineIdx] += args[2];
-                Console.WriteLine(lineIdx + " > " + cedit.lines[lineIdx]);
+                EtorumConsole.WriteLine(lineIdx + " > " + cedit.lines[lineIdx]);
                 cedit.changed = true;
             }
 
@@ -219,7 +227,7 @@ namespace EtorumOS.ETOScript.Commands {
                 }
 
                 cedit.lines.Insert(lineIdx+1, args[2]);
-                Console.WriteLine(lineIdx+1 + " > " + cedit.lines[lineIdx+1]);
+                EtorumConsole.WriteLine(lineIdx+1 + " > " + cedit.lines[lineIdx+1]);
                 cedit.changed = true;
             }
 
@@ -234,7 +242,7 @@ namespace EtorumOS.ETOScript.Commands {
             public override void Execute(string[] args)
             {
                 cedit.lines.Add(args[1]);
-                Console.WriteLine(cedit.lines.Count-1 + " > " + cedit.lines.Last());
+                EtorumConsole.WriteLine(cedit.lines.Count-1 + " > " + cedit.lines.Last());
                 cedit.changed = true;
             }
 
@@ -256,7 +264,7 @@ namespace EtorumOS.ETOScript.Commands {
                 }
 
                 cedit.lines[lineIdx] = args[2] + cedit.lines[lineIdx];
-                Console.WriteLine(lineIdx + " > " + cedit.lines[lineIdx]);
+                EtorumConsole.WriteLine(lineIdx + " > " + cedit.lines[lineIdx]);
                 cedit.changed = true;
             }
 
@@ -303,7 +311,7 @@ namespace EtorumOS.ETOScript.Commands {
             public override void Execute(string[] args)
             {
                 File.WriteAllText(cedit.filePath, cedit.lines.Join("\n"));
-                Console.WriteLine("Saved " + cedit.lines.Count + " lines to " + cedit.filePath);
+                EtorumConsole.WriteLine("Saved " + cedit.lines.Count + " lines to " + cedit.filePath);
             }
 
             public override string Name => "save";
@@ -317,7 +325,7 @@ namespace EtorumOS.ETOScript.Commands {
             {
                 foreach(CEdit_Command cmd in cedit.Commands)
                 {
-                    Console.WriteLine(cmd.Syntax + " | " + cmd.Desc);
+                    EtorumConsole.WriteLine(cmd.Syntax + " | " + cmd.Desc);
                 }
             }
 

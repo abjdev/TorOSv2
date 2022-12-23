@@ -19,7 +19,7 @@ namespace EtorumOS.ETOScript.Commands {
                     Helpers.Write(ConsoleColor.White, file + "\n");
                 }
             }else if (args[1] == "sanitize") {
-                Helpers.WriteLine(ConsoleColor.White, EtorumIO.Sanitize(args[2]));
+                Helpers.WriteLine(ConsoleColor.White, EtorumIO.SanitizePermissionPath(args[2]));
             }else if (args[1] == "permcheck") {
                 bool result = false;
 
@@ -30,10 +30,26 @@ namespace EtorumOS.ETOScript.Commands {
                     case "write":
                         result = EtorumIO.CurrentUserCan(PermissionType.WRITE_FILE, args[3]);
                         break;
+                    default:
+                        Helpers.WriteLine(ConsoleColor.Red, "Invalid permcheck (read/write)");
+                        return;
                 }
 
-                Helpers.WriteLine(ConsoleColor.Yellow, "Result: ");
-                Helpers.Write(result ? ConsoleColor.Green : ConsoleColor.Red, result ? "Yes" : "No");
+                Helpers.Write(ConsoleColor.Yellow, "Result: ");
+
+                if(result) {
+                    Helpers.WriteLine(ConsoleColor.Green, "Yes");
+                }else {
+                    Helpers.WriteLine(ConsoleColor.Red, "No");
+                }
+                
+            }else if (args[1] == "tryparse") {
+                Helpers.WriteLine(ConsoleColor.Yellow, "Enter input to parse: ");
+                var input = Console.ReadLine();
+
+                string[] parsed = Parser.ParseCommand(input);
+                Helpers.WriteLine(ConsoleColor.Gray, string.Join(", ", parsed));
+                
             }
         }
 

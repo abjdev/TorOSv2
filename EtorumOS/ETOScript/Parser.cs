@@ -14,20 +14,18 @@ namespace EtorumOS.ETOScript {
             bool isInStr = false;
             while (i < text.Length)
             {
-                if (text[i] == '"') isInStr = !isInStr;
-                else if(text[i] == ';' || text[i] == '\n' || text[i] == '\r')
-                {
-                    if (!isInStr)
-                    {
+                if (text[i] == '"') {
+                    temp += text[i];
+                    isInStr = !isInStr;
+                } else if (text[i] == ';' || text[i] == '\n' || text[i] == '\r') {
+                    if (!isInStr) {
                         seperatedCmds_.Add(temp);
                         temp = "";
                         isInStr = false;
-                    }else
-                    {
+                    } else {
                         temp += text[i];
                     }
-                }else
-                {
+                } else {
                     temp += text[i];
                 }
                 i++;
