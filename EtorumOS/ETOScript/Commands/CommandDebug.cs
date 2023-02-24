@@ -4,8 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EtorumOS.IO;
 
-namespace EtorumOS.ETOScript.Commands {
+namespace EtorumOS.ETOScript.Commands
+{
     internal class CommandDebug : Command {
         public override void Execute(string[] args) {
             if (args.Length < 2) {

@@ -20,6 +20,7 @@
         <TraceMode>All</TraceMode>
         <DebugEnabled>True</DebugEnabled>
         <CompressionType>None</CompressionType>
+        <ExtractMapFile>True</ExtractMapFile>
     </PropertyGroup>
 
     <ItemGroup>
