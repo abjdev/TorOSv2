@@ -7,8 +7,10 @@ using System.IO;
 using Cosmos.System;
 using Console = System.Console;
 using EtorumOS.KeyboardLayouts;
+using EtorumOS.IO;
 
-namespace EtorumOS.Services {
+namespace EtorumOS.Services
+{
     internal class KeyboardLayoutService : Service {
         public static KeyboardLayoutService Instance;
 

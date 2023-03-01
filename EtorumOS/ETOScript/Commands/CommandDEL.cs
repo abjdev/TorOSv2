@@ -4,8 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EtorumOS.IO;
 
-namespace EtorumOS.ETOScript.Commands {
+namespace EtorumOS.ETOScript.Commands
+{
     internal class CommandDEL : Command {
         public override void Execute(string[] args) {
             if (args.Length < 2) {
@@ -13,7 +15,7 @@ namespace EtorumOS.ETOScript.Commands {
                 return;
             }
 
-            string tempPath = Path.GetFullPath(Path.Combine(Kernel.Instance.CurrentPath, args[1]));
+            string tempPath = EtorumIO.CreatePath(args[1]);
 
             if (!File.Exists(tempPath)) {
                 Helpers.WriteLine(ConsoleColor.Red, "File was not found. (was looking for " + tempPath + ")");

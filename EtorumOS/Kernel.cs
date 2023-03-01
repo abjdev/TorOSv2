@@ -20,7 +20,8 @@ namespace EtorumOS {
         public string CurrentPath { get; set; } = @"0:\";
         public List<Command> Commands { get; private set; } = new() {
             new CommandCD(), new CommandMKDIR(), new CommandLS(), new CommandREAD(), new CommandSetKeyboardLayout(),
-            new CommandDEL(), new CommandSetPassword(), new CommandCEDIT(), new CommandDebug()
+            new CommandDEL(), new CommandSetPassword(), new CommandCEDIT(), new CommandDebug(), new CommandACL(),
+            new CommandUM()
         };
 
         public Dictionary<string, string> EnvironmentVars = new();
@@ -69,6 +70,11 @@ namespace EtorumOS {
                 Helpers.Write(ConsoleColor.DarkGray, CurrentPath + " > ");
 
                 string cliIn = Console.ReadLine();
+
+                foreach (KeyValuePair<string, string> kvp in EnvironmentVars) {
+                    cliIn = cliIn.Replace("%" + kvp.Key, kvp.Value);
+                }
+                
                 RunCommands(cliIn);
             }catch(Exception ex) {
                 mDebugger.Send("Exception occurred during main loop");

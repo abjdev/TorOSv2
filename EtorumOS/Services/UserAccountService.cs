@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using System.IO;
 using Cosmos.HAL;
 using EtorumOS.Cryptography;
+using EtorumOS.IO;
 
-namespace EtorumOS.Services {
+namespace EtorumOS.Services
+{
     internal class UserAccountService : Service {
         public static UserAccountService Instance;
         public User User { get; private set; }
@@ -28,7 +30,7 @@ namespace EtorumOS.Services {
                 return;
             }
 
-            //EtorumIO.RegisterReserved(userDBLocation); 
+            EtorumIO.RegisterReserved(userDBLocation); 
             LoadUsers();
         }
 
@@ -81,6 +83,7 @@ namespace EtorumOS.Services {
             if(!File.Exists($@"0:\users\{User.Name}\autorun.etos"))
             {
                 File.Create($@"0:\users\{User.Name}\autorun.etos").Close();
+                new ACL($@"0:\users\{User.Name}\autorun.etos").SetPermission(User.Name, true, true);
             }
 
             string c = File.ReadAllText($@"0:\users\{User.Name}\autorun.etos");
@@ -114,6 +117,18 @@ namespace EtorumOS.Services {
         private void AddUser(User user) {
             users.Add(user);
             SaveUsers();
+        }
+        
+        public bool RemoveUser(string name) {
+            User user = GetUser(name);
+
+            if (user == null) {
+                return false;
+            }
+
+            users.Remove(user);
+            SaveUsers();
+            return true;
         }
 
         public bool TryAuthenticate(string name, string password) {

@@ -19,6 +19,7 @@ namespace EtorumOS.ETOScript.Commands {
             }
 
             foreach (string file in Directory.GetFiles(Kernel.Instance.CurrentPath)) {
+                if (file.EndsWith(".acl")) continue; // don't show acl files.
                 Helpers.Write(ConsoleColor.Blue, "<FILE>   ");
                 Helpers.WriteLine(ConsoleColor.White, file);
             }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EtorumOS.IO;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,13 +14,7 @@ namespace EtorumOS.ETOScript.Commands {
                 return;
             }
 
-            string tempPath = Path.GetFullPath(Path.Combine(Kernel.Instance.CurrentPath, args[1]));
-
-            if(tempPath.EndsWith(".."))
-            {
-                string[] parts = tempPath.Split('\\');
-                tempPath = parts.Take(parts.Length - 2).Join("\\", true);
-            }
+            string tempPath = EtorumIO.CreatePath(args[1]);
 
             if(!Directory.Exists(tempPath)) {
                 Helpers.WriteLine(ConsoleColor.Red, "Path was not found. (was looking for " + tempPath + ")");

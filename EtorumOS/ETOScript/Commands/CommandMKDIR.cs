@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EtorumOS.IO;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace EtorumOS.ETOScript.Commands {
                 return;
             }
 
-            string tempPath = Path.Combine(Kernel.Instance.CurrentPath, args[1]);
+            string tempPath = EtorumIO.CreatePath(args[1]);
             Directory.CreateDirectory(tempPath);
         }
 
