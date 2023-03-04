@@ -37,4 +37,9 @@
       <Folder Include="Plugs\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\lowSpagVM\libLowSpagAssembler\libLowSpagAssembler.csproj" />
+      <ProjectReference Include="..\..\lowSpagVM\libLowSpagVM\libLowSpagVM.csproj" />
+    </ItemGroup>
+
 </Project>

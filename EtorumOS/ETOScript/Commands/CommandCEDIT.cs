@@ -28,15 +28,15 @@ namespace EtorumOS.ETOScript.Commands
 
             string tempPath = EtorumIO.CreatePath(args[1]);
 
-            if (!File.Exists(tempPath)) {
-                Helpers.WriteLine(ConsoleColor.Red, "File was not found. (was looking for " + tempPath + ")");
-                return;
-            }
-
             if (!EtorumIO.CurrentUserCan(PermissionType.WRITE_FILE, tempPath)) {
                 Helpers.WriteLine(ConsoleColor.Red, "Access to file is denied.");
                 return;
             }
+            
+            if (!File.Exists(tempPath)) {
+                File.Create(tempPath).Close();
+            }
+
 
             EtorumConsole.WriteLine("Welcome to CEdit, your command based editor! \nCEdit uses ETOScript syntax.");
             EtorumConsole.WriteLine("To get started, do 'show' to show all lines.");

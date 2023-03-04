@@ -21,7 +21,9 @@ namespace EtorumOS {
         public List<Command> Commands { get; private set; } = new() {
             new CommandCD(), new CommandMKDIR(), new CommandLS(), new CommandREAD(), new CommandSetKeyboardLayout(),
             new CommandDEL(), new CommandSetPassword(), new CommandCEDIT(), new CommandDebug(), new CommandACL(),
-            new CommandUM()
+            new CommandUM(),
+
+            new CommandLVM(), new CommandLASM()
         };
 
         public Dictionary<string, string> EnvironmentVars = new();
