@@ -29,7 +29,7 @@ namespace EtorumOS.ETOScript.Commands
             }
 
             CPU cpu = CPU.Load(File.ReadAllBytes(tempPath));
-            Instructions.Write = (string text) => EtorumConsole.WriteLine(text);
+            Instructions.Write = (string text) => EtorumConsole.Write(text);
 
             cpu.Run();
         }
