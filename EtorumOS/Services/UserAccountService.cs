@@ -64,9 +64,9 @@ namespace EtorumOS.Services
             while (true)
             {
                 EtorumConsole.Write("Name: ");
-                string username = Console.ReadLine();
+                string username = EtorumConsole.ReadLine();
                 EtorumConsole.Write("Password: ");
-                string password = Console.ReadLine();
+                string password = EtorumConsole.ReadLine();
 
                 if (TryAuthenticate(username, password)) break;
                 else

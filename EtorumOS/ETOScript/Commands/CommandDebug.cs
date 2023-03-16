@@ -47,7 +47,7 @@ namespace EtorumOS.ETOScript.Commands
                 
             }else if (args[1] == "tryparse") {
                 Helpers.WriteLine(ConsoleColor.Yellow, "Enter input to parse: ");
-                var input = Console.ReadLine();
+                var input = EtorumConsole.ReadLine();
 
                 string[] parsed = Parser.ParseCommand(input);
                 Helpers.WriteLine(ConsoleColor.Gray, string.Join(", ", parsed));

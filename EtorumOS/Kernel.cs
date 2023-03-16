@@ -21,7 +21,7 @@ namespace EtorumOS {
         public List<Command> Commands { get; private set; } = new() {
             new CommandCD(), new CommandMKDIR(), new CommandLS(), new CommandREAD(), new CommandSetKeyboardLayout(),
             new CommandDEL(), new CommandSetPassword(), new CommandCEDIT(), new CommandDebug(), new CommandACL(),
-            new CommandUM(),
+            new CommandUM(), new CommandUI(),
 
             new CommandLVM(), new CommandLASM()
         };
@@ -71,7 +71,7 @@ namespace EtorumOS {
                 Helpers.Write(ConsoleColor.Green, $"[{UserAccountService.Instance.User.Name}] ");
                 Helpers.Write(ConsoleColor.DarkGray, CurrentPath + " > ");
 
-                string cliIn = Console.ReadLine();
+                string cliIn = EtorumConsole.ReadLine();
 
                 foreach (KeyValuePair<string, string> kvp in EnvironmentVars) {
                     cliIn = cliIn.Replace("%" + kvp.Key, kvp.Value);
@@ -89,15 +89,22 @@ namespace EtorumOS {
         private void Panic(Exception ex, string task = "UNSPECIFIED") {
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.DarkRed;
-            
+
             /*for(int y = 0; y < Console.WindowHeight; y++) {
                 EtorumConsole.Write(" ".Repeat(Console.WindowWidth));
             }*/
 
             //Console.CursorTop = 0;
             //Console.CursorLeft = 0;
-            EtorumConsole.WriteLine("** ETORUM PANIC during " + task + "**");
-            EtorumConsole.WriteLine(ex.ToString());
+            try {
+                EtorumConsole.WriteLine("** ETORUM PANIC during " + task + "**");
+                EtorumConsole.WriteLine(ex.Message);
+            }catch(Exception ex2) {
+                mDebugger.Send("original:");
+                mDebugger.Send(ex.Message);
+                mDebugger.Send("failure to show panic screen exception:");
+                mDebugger.Send(ex2.Message);
+            }
         }
 
         private void IntCrash(string intCrashName) {

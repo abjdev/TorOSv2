@@ -58,7 +58,7 @@ namespace EtorumOS.Services
 
 Your Selection: ");
 
-                string res = Console.ReadLine();
+                string res = EtorumConsole.ReadLine();
                 byte[] bytes = Encoding.Unicode.GetBytes(res);
                 Kernel.Instance.mDebugger.Send(bytes.Join(", "));
                 bool success = true;

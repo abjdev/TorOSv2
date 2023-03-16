@@ -49,7 +49,7 @@ namespace EtorumOS.ETOScript.Commands
                 Helpers.Write(ConsoleColor.Green, $"[CEdit] ");
                 Helpers.Write(ConsoleColor.DarkGray, filePath + " > ");
 
-                string cliIn = Console.ReadLine();
+                string cliIn = EtorumConsole.ReadLine();
                 RunCommands(cliIn);
 
                 if (exit) {
