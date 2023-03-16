@@ -9,7 +9,9 @@ namespace EtorumOS.ETOScript.Commands {
     internal class CommandUI : Command {
         public override void Execute(string[] args) {
             if (args.Length < 2) {
-                EtorumConsole.SwitchToGraphicsMode();
+                Helpers.WriteLine(ConsoleColor.Red, "Are you sure you want to switch to graphics mode? This mode is currently unstable, glitchy and slow. (y/n)");
+                var res = Console.ReadKey();
+                if(res.KeyChar.ToString().ToLowerInvariant() == "y") EtorumConsole.SwitchToGraphicsMode();
                 return;
             }
             

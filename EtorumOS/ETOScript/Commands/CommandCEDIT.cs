@@ -327,8 +327,10 @@ namespace EtorumOS.ETOScript.Commands
             {
                 foreach(CEdit_Command cmd in cedit.Commands)
                 {
-                    EtorumConsole.WriteLine(cmd.Syntax + " | " + cmd.Desc);
+                    EtorumConsole.WriteLine(cmd.Syntax + " | " + cmd.Desc, doNotForceRedraw: true);
                 }
+
+                EtorumConsole.RedrawWhole();
             }
 
             public override string Name => "help";

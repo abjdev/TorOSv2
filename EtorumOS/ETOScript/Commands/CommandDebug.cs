@@ -9,6 +9,7 @@ using EtorumOS.IO;
 namespace EtorumOS.ETOScript.Commands
 {
     internal class CommandDebug : Command {
+        
         public override void Execute(string[] args) {
             if (args.Length < 2) {
                 Helpers.WriteLine(ConsoleColor.Red, "Syntax: debug [... args]");
@@ -52,6 +53,10 @@ namespace EtorumOS.ETOScript.Commands
                 string[] parsed = Parser.ParseCommand(input);
                 Helpers.WriteLine(ConsoleColor.Gray, string.Join(", ", parsed));
                 
+            }else if (args[1] == "dbgout") {
+                EtorumConsole.SendShitToTheDebugger = !EtorumConsole.SendShitToTheDebugger;
+
+                Helpers.WriteLine(ConsoleColor.Yellow, "SendShitToTheDebugger is now " + (EtorumConsole.SendShitToTheDebugger ? "enabled" : "disabled"));
             }
         }
 

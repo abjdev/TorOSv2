@@ -22,6 +22,10 @@ namespace EtorumOS {
         private static List<string> lines = new() { "" };
         private static List<Color> charColorBuffer = new();
 
+        public static int MaxLines => 720 / 16;
+
+        public static bool SendShitToTheDebugger { get; set; } = true;
+
         public static (int x, int y) Position { get; set; } = (0, 0);
         
         public static bool SwitchToGraphicsMode()
@@ -35,65 +39,46 @@ namespace EtorumOS {
                 return false;
             }
         }
+
+        public static void QuickScroll()
+        {
+            // soon:tm:
+        }
         
-        public static void WriteLine(string msg) {
-            Kernel.Instance.mDebugger.Send(msg);
+        public static void WriteLine(string msg, bool doNotForceRedraw = false) {
+            if(SendShitToTheDebugger) Kernel.Instance.mDebugger.Send(msg);
 
             if (Canvas == null) {
                 Console.WriteLine(msg);
             }else {
                 msg += "\n";
 
-                Write(msg);
+                Write(msg, doNotForceRedraw);
             }
         }
 
-        public static Exception? RedrawWhole()
-        {
-            if(Canvas == null) {
-                return new InvalidOperationException("Can not redraw non-canvas console!");
-            }
-
-            Canvas.Clear(Color.Black);
-
-            int bufferOffset = 0;
-            int x = 0, y = 0;
-
-            foreach(string line in lines) {
-                foreach(char c in line) {
-                    Canvas.DrawString(c.ToString(), PCScreenFont.Default, charColorBuffer[bufferOffset], x*8, y*16);
-                    x++;
-                    bufferOffset++;
-                }
-
-                y++;
-            }
-
-            Canvas.Display();
-            return null;
-        }
-
-        private static int AllLinesSum(int lineOffset = 0)
-        {
-            int sum = 0;
-            for(int i = 0; i < lines.Count - 1 - lineOffset; i++) {
-                sum += lines[i].Length;
-            }
-            return sum;
-        }
-
-        public static void Write(string msg) {
-            Kernel.Instance.mDebugger.Send(msg);
+        public static void Write(string msg, bool doNotForceRedraw = false) {
+            if (SendShitToTheDebugger) Kernel.Instance.mDebugger.Send(msg);
 
             int offset = AllLinesSum(1);
             if (Canvas == null) {
                 Console.Write(msg);
             }else {
+                bool needsRedraw = false;
+
                 foreach (char c in msg) {
                     if (c == '\n') {
                         // TODO: If position.x != end, break up the lines accordingly
                         lines.Add("");
                         Position = (0, Position.y + 1);
+
+                        if(lines.Count > MaxLines) {
+                            charColorBuffer.RemoveRange(0, lines[0].Length);
+                            lines.RemoveAt(0);
+                            Position = (0, Position.y - 1);
+                            needsRedraw = true;
+                        }
+
                         offset = AllLinesSum(1);
                     } else if (c == '\t') {
                         lines[Position.y] = lines[Position.y] + "    ";
@@ -122,6 +107,7 @@ namespace EtorumOS {
                     }
                 }
 
+                if (needsRedraw && !doNotForceRedraw) RedrawWhole();
                 Canvas.Display();
             }
         }
@@ -170,6 +156,41 @@ namespace EtorumOS {
             var key = Console.ReadKey();
             Write(key.KeyChar.ToString());
             return key;
+        }
+
+        public static Exception? RedrawWhole()
+        {
+            if (Canvas == null) {
+                return new InvalidOperationException("Can not redraw non-canvas console!");
+            }
+
+            Canvas.Clear(Color.Black);
+
+            int bufferOffset = 0;
+            int x = 0, y = 0;
+
+            foreach (string line in lines) {
+                foreach (char c in line) {
+                    Canvas.DrawString(c.ToString(), PCScreenFont.Default, charColorBuffer[bufferOffset], x * 8, y * 16);
+                    x++;
+                    bufferOffset++;
+                }
+
+                x = 0;
+                y++;
+            }
+
+            Canvas.Display();
+            return null;
+        }
+
+        private static int AllLinesSum(int lineOffset = 0)
+        {
+            int sum = 0;
+            for (int i = 0; i < lines.Count - 1 - lineOffset; i++) {
+                sum += lines[i].Length;
+            }
+            return sum;
         }
     }
 }
